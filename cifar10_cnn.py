@@ -1,23 +1,51 @@
-from matplotlib import pyplot
+import tensorflow as tf
+import matplotlib.pyplot as plt
+import sys
 from keras.datasets import cifar10
-# load dataset
-(train_x, train_y), (test_x, test_y) = cifar10.load_data()
-# summarize loaded dataset
-print('Train: X=%s, y=%s' % (train_x.shape, train_y.shape))
-print('Test: X=%s, y=%s' % (test_x.shape, test_y.shape))
-# plot first few images
-#for i in range(9):
-  # define subplot
-#  pyplot.subplot(330 + 1 + i)
-  # plot raw pixel data
-#  pyplot.imshow(trainX[i])
-# show the figure
-#pyplot.show()
 
 def main():
     epochs = 25
     batch_size = 128
-    
 
-if __name__ =  "__main__":
+    # load dataset
+    (train_x, train_y), (test_x, test_y) = cifar10.load_data()
+    # summarize loaded dataset
+    print('Train: X=%s, y=%s' % (train_x.shape, train_y.shape))
+    print('Test: X=%s, y=%s' % (test_x.shape, test_y.shape))
+    # plot first few images
+    #for i in range(9):
+      # define subplot
+      # pyplot.subplot(330 + 1 + i)
+      # plot raw pixel data
+      # pyplot.imshow(trainX[i])
+    # show the figure
+    #pyplot.show()
+
+    #create model
+    model = tf.keras.models.Sequential([
+        tf.keras.layers.Conv2D(32, (3, 3), activation = 'relu', input_shape = (32, 32, 3)),
+        tf.keras.layers.MaxPooling2D(2, 2),
+        tf.keras.layers.Conv2D(64, (3, 3), activation = 'relu'),
+        tf.keras.layers.MaxPooling2D(2, 2),
+        tf.keras.layers.Conv2D(128, (3, 3), activation = 'relu'),
+        tf.keras.layers.Conv2D(256, (3, 3), activation = 'relu'),
+        tf.keras.layers.Dense(2048, activation = "relu"),
+        tf.keras.layers.Dense(10, activation = "relu")
+    ])
+
+    #configure model
+    model.compile(optimizer = tf.keras.optimizers.Adam(0.001),
+                  loss = tf.keras.losses.SparseCategoricalCrossentropy(),
+                  metrics = [tf.keras.metrics.SparseCategoricalAccuracy()],)
+
+    #print out model summary
+    model.summary()
+
+    #train model
+    model.fit(train_x, train_y, batch_size, epochs)
+
+    #evaluate on testing data
+    model.evaluate(test_x, test_y)
+
+if __name__ ==  "__main__":
     main()
