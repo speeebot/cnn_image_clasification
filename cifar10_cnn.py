@@ -26,7 +26,7 @@ def plot_results(history, metric, val_metric):
     plt.show()
 
 def main():
-    epochs = 1
+    epochs = 25
     batch_size = 128
     opt = tf.keras.optimizers.Adam(0.001)
     loss_fun = 'sparse_categorical_crossentropy'
@@ -35,8 +35,6 @@ def main():
 
     # load dataset
     train_x, train_y, test_x, test_y = get_data();
-    #train_y = to_categorical(train_y)
-    #test_y = to_categorical(test_y)
 
     # summarize loaded dataset
     print('Train: X=%s, y=%s' % (train_x.shape, train_y.shape))
@@ -51,14 +49,10 @@ def main():
         tf.keras.layers.Conv2D(128, (3, 3), activation = 'relu'),
         tf.keras.layers.Conv2D(256, (3, 3), activation = 'relu'),
         tf.keras.layers.Flatten(),
-        #tf.keras.layers.Dropout(0.2),
-        #tf.keras.layers.Dense(2048, activation = "relu", kernel_regularizer=tf.keras.regularizers.l2(0.01)),
-        #tf.keras.layers.Dropout(0.2),
-        #tf.keras.layers.Dense(2048, activation = "relu", kernel_regularizer=tf.keras.regularizers.l2(0.01)),
-#        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(2048, activation = "relu"),
-  #      tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(2048, activation = "relu"),
+        tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Dense(2048, activation = "relu", kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+        tf.keras.layers.Dropout(0.2),
+        tf.keras.layers.Dense(2048, activation = "relu", kernel_regularizer=tf.keras.regularizers.l2(0.01)),
         tf.keras.layers.Dense(10, activation = "softmax")
     ])
 
@@ -78,7 +72,7 @@ def main():
     print("Test accuracy: {}".format(test_acc))
 
     #display accuracy over epochs
-    plot_results(history, metric, val_metric)
+    #plot_results(history, metric, val_metric)
 
 if __name__ ==  "__main__":
     main()
